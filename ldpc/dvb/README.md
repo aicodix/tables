@@ -1,7 +1,11 @@
 
 ### [fixed](fixed)
 
-Transformed and manually swapped lines to avoid data hazards.
+Transformed and swapped lines to avoid data hazards.
+
+### [fixed_15](fixed_15)
+
+Transformed and swapped lines to avoid data hazards for vector size of 15.
 
 ### [trans](trans)
 
@@ -39,4 +43,27 @@ Information about transformed table
 ### [check_trans.cc](check_trans.cc)
 
 Check transformed table for data hazards
+
+### [check_vector.cc](check_vector.cc)
+
+Check transformed vector table for data hazards
+
+### Automatically fixing vector tables
+
+Prerequisites:
+
+* [GLPK](https://www.gnu.org/software/glpk/) to solve linear programming problems.
+* A lot of memory, disk space and patience.
+
+Copy tables that needs permutation to ```input_15``` directory.
+Run ```make solve_15``` to generate models of tables, solve models and permutate tables.
+Copy solved table from ```solved_15``` directory to ```fixed_15```, commit and send pull request.
+
+### [model_trans.cc](model_trans.cc)
+
+Generate model of table that avoids data hazards
+
+### [solved_trans.cc](solved_trans.cc)
+
+Generate data hazard free table from transformed table and solution
 
