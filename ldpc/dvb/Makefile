@@ -2,11 +2,11 @@
 .PHONY: info
 info: $(addprefix info/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
-.PHONY: test
-test: $(addprefix check/,$(notdir $(wildcard fixed/dvb_*.txt)))
+.PHONY: check
+check: $(addprefix check/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
-.PHONY: all
-all: $(addprefix trans/,$(notdir $(wildcard orig/dvb_*.txt)))
+.PHONY: trans
+trans: $(addprefix trans/,$(notdir $(wildcard orig/dvb_*.txt)))
 
 trans/dvb_16200_%.txt: orig/dvb_16200_%.txt dvb_trans
 	./dvb_trans $@ $< 16200 360
@@ -26,14 +26,14 @@ info/dvb_32400_%.txt: fixed/dvb_32400_%.txt info_trans
 info/dvb_64800_%.txt: fixed/dvb_64800_%.txt info_trans
 	./info_trans $< 64800 360
 
-check/dvb_16200_%.txt: fixed/dvb_16200_%.txt check_trans | check
-	./check_trans $< 16200 360 && touch $@
+check/dvb_16200_%.txt: fixed/dvb_16200_%.txt check_trans
+	./check_trans $< 16200 360
 
-check/dvb_32400_%.txt: fixed/dvb_32400_%.txt check_trans | check
-	./check_trans $< 32400 360 && touch $@
+check/dvb_32400_%.txt: fixed/dvb_32400_%.txt check_trans
+	./check_trans $< 32400 360
 
-check/dvb_64800_%.txt: fixed/dvb_64800_%.txt check_trans | check
-	./check_trans $< 64800 360 && touch $@
+check/dvb_64800_%.txt: fixed/dvb_64800_%.txt check_trans
+	./check_trans $< 64800 360
 
 dvb_trans: dvb_trans.cc
 
@@ -41,10 +41,7 @@ info_trans: info_trans.cc
 
 check_trans: check_trans.cc
 
-check:
-	mkdir $@
-
 .PHONY: clean
 clean:
-	rm -rf dvb_trans info_trans check_trans check
+	rm -rf dvb_trans info_trans check_trans
 
