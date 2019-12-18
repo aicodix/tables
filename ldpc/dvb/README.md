@@ -7,6 +7,10 @@ Transformed and manually swapped lines to avoid data hazards.
 
 Transformed DVB LDPC code tables by [dvb_trans.cc](dvb_trans.cc)
 
+### [trans_15](trans_15)
+
+Transformed DVB LDPC code tables by [vector_trans.cc](vector_trans.cc) for vector size of 15
+
 ### [orig](orig)
 
 Unchanged DVB LDPC parity bit address tables
@@ -23,6 +27,10 @@ https://www.etsi.org/deliver/etsi_en/302700_302799/302755/01.04.01_60/en_302755v
 ### [dvb_trans.cc](dvb_trans.cc)
 
 Transform DVB LDPC table
+
+### [vector_trans.cc](vector_trans.cc)
+
+Transform DVB LDPC table for vector decoders
 
 ### [info_trans.cc](info_trans.cc)
 
