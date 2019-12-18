@@ -24,6 +24,10 @@ https://www.etsi.org/deliver/etsi_en/302700_302799/302755/01.04.01_60/en_302755v
 
 Transform DVB LDPC table
 
+### [info_trans.cc](info_trans.cc)
+
+Information about transformed table
+
 ### [check_trans.cc](check_trans.cc)
 
 Check transformed table for data hazards
