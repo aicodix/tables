@@ -1,4 +1,8 @@
 
+### [fixed](fixed)
+
+Transformed and manually swapped lines to avoid data hazards.
+
 ### [trans](trans)
 
 Transformed DVB LDPC code tables by [dvb_trans.cc](dvb_trans.cc)
@@ -19,4 +23,8 @@ https://www.etsi.org/deliver/etsi_en/302700_302799/302755/01.04.01_60/en_302755v
 ### [dvb_trans.cc](dvb_trans.cc)
 
 Transform DVB LDPC table
+
+### [check_trans.cc](check_trans.cc)
+
+Check transformed table for data hazards
 
