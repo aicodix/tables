@@ -53,6 +53,10 @@ int main(int argc, char **argv)
 			std::cerr << "parsing or bound error!" << std::endl;
 			return 1;
 		}
+		if (val && lines[line] != -1) {
+			std::cerr << "solution error!" << std::endl;
+			return 1;
+		}
 		if (val)
 			lines[line] = pty;
 	}
