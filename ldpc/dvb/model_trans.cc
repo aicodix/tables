@@ -8,6 +8,8 @@ Copyright 2019 Ahmet Inan <inan@aicodix.de>
 #include <iostream>
 #include <vector>
 
+const int PIPELINE_LENGTH = 13;
+
 int main(int argc, char **argv)
 {
 	if (argc != 3)
@@ -54,10 +56,14 @@ int main(int argc, char **argv)
 						goto found;
 			continue;
 			found:
-			for (int line = 0; line < ptys.size(); ++line)
-				table_model << "P" << pty0 << "L" << line << " + P" << pty1 << "L" << (line+1)%ptys.size() << " <= 1" << std::endl;
-			for (int line = 0; line < ptys.size(); ++line)
-				table_model << "P" << pty1 << "L" << line << " + P" << pty0 << "L" << (line+1)%ptys.size() << " <= 1" << std::endl;
+			int delay0 = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
+			for (int dist = 1; dist < delay0; ++dist)
+				for (int line = 0; line < ptys.size(); ++line)
+					table_model << "P" << pty0 << "L" << line << " + P" << pty1 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
+			int delay1 = (PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
+			for (int dist = 1; dist < delay1; ++dist)
+				for (int line = 0; line < ptys.size(); ++line)
+					table_model << "P" << pty1 << "L" << line << " + P" << pty0 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
 		}
 	}
 	table_model << "Binary" << std::endl;

@@ -8,6 +8,8 @@ Copyright 2019 Ahmet Inan <inan@aicodix.de>
 #include <iostream>
 #include <vector>
 
+const int PIPELINE_LENGTH = 13;
+
 int main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -42,12 +44,15 @@ int main(int argc, char **argv)
 		}
 	}
 	for (int pty0 = 0; pty0 < ptys.size(); ++pty0) {
-		int pty1 = (pty0 + 1) % ptys.size();
-		for (const auto &loc0: ptys[pty0]) {
-			for (const auto &loc1: ptys[pty1]) {
-				if (loc0.off == loc1.off) {
-					std::cout << "consecutive parities " << pty0 << " and " << pty1 << " have same location offset " << loc0.off << std::endl;
-					++violations;
+		int delay = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
+		for (int dist = 1; dist < delay; ++dist) {
+			int pty1 = (pty0 + dist) % ptys.size();
+			for (const auto &loc0: ptys[pty0]) {
+				for (const auto &loc1: ptys[pty1]) {
+					if (loc0.off == loc1.off) {
+						std::cout << "parities " << pty0 << " and " << pty1 << " have same location offset " << loc0.off << std::endl;
+						++violations;
+					}
 				}
 			}
 		}

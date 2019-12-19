@@ -59,12 +59,6 @@ Copy tables that needs permutation to ```input_15``` directory.
 Run ```make solve_15``` to generate models of tables, solve models and permutate tables.
 Copy solved table from ```solved_15``` directory to ```fixed_15```, commit and send pull request.
 
-### FYI
-
-No solutions for:
-
-dvb_16200_s2_c10.txt
-
 ### [model_trans.cc](model_trans.cc)
 
 Generate model of table that avoids data hazards
