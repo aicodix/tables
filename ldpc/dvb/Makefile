@@ -24,9 +24,11 @@ model_15/dvb_%.txt: input_15/dvb_%.txt model_trans | model_15
 
 solution_15/dvb_%.txt: model_15/dvb_%.txt | solution_15
 	$(GLPSOL) -o $@ --lp $<
+	rm -f $<
 
 solved_15/dvb_%.txt: solution_15/dvb_%.txt solved_trans
 	./solved_trans $@ $< $(addprefix input_15/,$(notdir $<))
+	rm -f $<
 
 check_15/dvb_%.txt: fixed_15/dvb_%.txt check_vector
 	./check_vector $<
