@@ -7,31 +7,8 @@ info: $(addprefix info/,$(notdir $(wildcard fixed/dvb_*.txt)))
 .PHONY: check
 check: $(addprefix check/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
-.PHONY: trans
-trans: $(addprefix trans/,$(notdir $(wildcard orig/dvb_*.txt)))
-
-.PHONY: trans_15
-trans_15: $(addprefix trans_15/,$(notdir $(wildcard fixed/dvb_*.txt)))
-
-.PHONY: check_15
-check_15: $(addprefix check_15/,$(notdir $(wildcard fixed_15/dvb_*.txt)))
-
-.PHONY: solved_15
-solved_15: $(addprefix solved_15/,$(notdir $(wildcard input_15/dvb_*.txt)))
-
-model_15/dvb_%.txt: input_15/dvb_%.txt model_trans | model_15
-	./model_trans $@ $<
-
-solution_15/dvb_%.txt: model_15/dvb_%.txt | solution_15
-	$(GLPSOL) -o $@ --lp $<
-	rm -f $<
-
-solved_15/dvb_%.txt: solution_15/dvb_%.txt solved_trans
-	./solved_trans $@ $< $(addprefix input_15/,$(notdir $<))
-	rm -f $<
-
-check_15/dvb_%.txt: fixed_15/dvb_%.txt check_vector
-	./check_vector $<
+.PHONY: transform
+transform: $(addprefix trans/,$(notdir $(wildcard orig/dvb_*.txt)))
 
 trans/dvb_16200_%.txt: orig/dvb_16200_%.txt dvb_trans
 	./dvb_trans $@ $< 16200 360
@@ -60,6 +37,37 @@ check/dvb_32400_%.txt: fixed/dvb_32400_%.txt check_trans
 check/dvb_64800_%.txt: fixed/dvb_64800_%.txt check_trans
 	./check_trans $< 64800 360
 
+dvb_trans: dvb_trans.cc
+info_trans: info_trans.cc
+check_trans: check_trans.cc
+check_vector: check_vector.cc
+vector_trans: vector_trans.cc
+model_trans: model_trans.cc
+solved_trans: solved_trans.cc
+
+.PHONY: transform_15
+transform_15: $(addprefix trans_15/,$(notdir $(wildcard fixed/dvb_*.txt)))
+
+.PHONY: check_15
+check_15: $(addprefix check_15/,$(notdir $(wildcard fixed_15/dvb_*.txt)))
+
+.PHONY: solve_15
+solve_15: $(addprefix solved_15/,$(notdir $(wildcard input_15/dvb_*.txt)))
+
+model_15/dvb_%.txt: input_15/dvb_%.txt model_trans | model_15
+	./model_trans $@ $<
+
+solution_15/dvb_%.txt: model_15/dvb_%.txt | solution_15
+	$(GLPSOL) -o $@ --lp $<
+	rm -f $<
+
+solved_15/dvb_%.txt: solution_15/dvb_%.txt solved_trans | solved_15
+	./solved_trans $@ $< $(addprefix input_15/,$(notdir $<))
+	rm -f $<
+
+check_15/dvb_%.txt: fixed_15/dvb_%.txt check_vector
+	./check_vector $<
+
 trans_15/dvb_16200_%.txt: fixed/dvb_16200_%.txt vector_trans
 	./vector_trans $@ $< 16200 360 15
 
@@ -69,18 +77,80 @@ trans_15/dvb_32400_%.txt: fixed/dvb_32400_%.txt vector_trans
 trans_15/dvb_64800_%.txt: fixed/dvb_64800_%.txt vector_trans
 	./vector_trans $@ $< 64800 360 15
 
-dvb_trans: dvb_trans.cc
-info_trans: info_trans.cc
-check_trans: check_trans.cc
-check_vector: check_vector.cc
-vector_trans: vector_trans.cc
-model_trans: model_trans.cc
-solved_trans: solved_trans.cc
+model_15 solution_15 solved_15:
+	mkdir -p $@
 
-model_15 solution_15:
-	mkdir $@
+.PHONY: transform_30
+transform_30: $(addprefix trans_30/,$(notdir $(wildcard fixed/dvb_*.txt)))
+
+.PHONY: check_30
+check_30: $(addprefix check_30/,$(notdir $(wildcard fixed_30/dvb_*.txt)))
+
+.PHONY: solve_30
+solve_30: $(addprefix solved_30/,$(notdir $(wildcard input_30/dvb_*.txt)))
+
+model_30/dvb_%.txt: input_30/dvb_%.txt model_trans | model_30
+	./model_trans $@ $<
+
+solution_30/dvb_%.txt: model_30/dvb_%.txt | solution_30
+	$(GLPSOL) -o $@ --lp $<
+	rm -f $<
+
+solved_30/dvb_%.txt: solution_30/dvb_%.txt solved_trans | solved_30
+	./solved_trans $@ $< $(addprefix trans_30/,$(notdir $<))
+	rm -f $<
+
+check_30/dvb_%.txt: fixed_30/dvb_%.txt check_vector
+	./check_vector $<
+
+trans_30/dvb_16200_%.txt: fixed/dvb_16200_%.txt vector_trans
+	./vector_trans $@ $< 16200 360 30
+
+trans_30/dvb_32400_%.txt: fixed/dvb_32400_%.txt vector_trans
+	./vector_trans $@ $< 32400 360 30
+
+trans_30/dvb_64800_%.txt: fixed/dvb_64800_%.txt vector_trans
+	./vector_trans $@ $< 64800 360 30
+
+model_30 solution_30 solved_30:
+	mkdir -p $@
+
+.PHONY: transform_45
+transform_45: $(addprefix trans_45/,$(notdir $(wildcard fixed/dvb_*.txt)))
+
+.PHONY: check_45
+check_45: $(addprefix check_45/,$(notdir $(wildcard fixed_45/dvb_*.txt)))
+
+.PHONY: solve_45
+solve_45: $(addprefix solved_45/,$(notdir $(wildcard input_45/dvb_*.txt)))
+
+model_45/dvb_%.txt: input_45/dvb_%.txt model_trans | model_45
+	./model_trans $@ $<
+
+solution_45/dvb_%.txt: model_45/dvb_%.txt | solution_45
+	$(GLPSOL) -o $@ --lp $<
+	rm -f $<
+
+solved_45/dvb_%.txt: solution_45/dvb_%.txt solved_trans | solved_45
+	./solved_trans $@ $< $(addprefix input_45/,$(notdir $<))
+	rm -f $<
+
+check_45/dvb_%.txt: fixed_45/dvb_%.txt check_vector
+	./check_vector $<
+
+trans_45/dvb_16200_%.txt: fixed/dvb_16200_%.txt vector_trans
+	./vector_trans $@ $< 16200 360 45
+
+trans_45/dvb_32400_%.txt: fixed/dvb_32400_%.txt vector_trans
+	./vector_trans $@ $< 32400 360 45
+
+trans_45/dvb_64800_%.txt: fixed/dvb_64800_%.txt vector_trans
+	./vector_trans $@ $< 64800 360 45
+
+model_45 solution_45 solved_45:
+	mkdir -p $@
 
 .PHONY: clean
 clean:
-	rm -rf dvb_trans info_trans check_trans check_vector vector_trans model_trans solved_trans model_15 solution_15
+	rm -rf dvb_trans info_trans check_trans check_vector vector_trans model_trans solved_trans model_15 solution_15 model_30 solution_30 model_45 solution_45 solved_45
 

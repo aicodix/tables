@@ -3,17 +3,17 @@
 
 Transformed and swapped lines to avoid data hazards.
 
-### [fixed_15](fixed_15)
+### [fixed_15](fixed_15) [fixed_30](fixed_30) [fixed_45](fixed_45)
 
-Transformed and swapped lines to avoid data hazards for vector size of 15.
+Transformed and swapped lines to avoid data hazards for vector sizes of 15, 30 and 45.
 
 ### [trans](trans)
 
 Transformed DVB LDPC code tables by [dvb_trans.cc](dvb_trans.cc)
 
-### [trans_15](trans_15)
+### [trans_15](trans_15) [trans_30](trans_30) [trans_45](trans_45)
 
-Transformed DVB LDPC code tables by [vector_trans.cc](vector_trans.cc) for vector size of 15
+Transformed DVB LDPC code tables by [vector_trans.cc](vector_trans.cc) for vector size of 15, 30 and 45.
 
 ### [orig](orig)
 
@@ -55,15 +55,17 @@ Prerequisites:
 * [GLPK](https://www.gnu.org/software/glpk/) to solve linear programming problems.
 * A lot of memory, disk space and patience.
 
-Copy tables that needs permutation to ```input_15``` directory.
+Example for vector size of 15:
+
+Copy tables that need permutation, e.g. from ```trans_15``` to ```input_15``` directory.
 Run ```make solve_15``` to generate models of tables, solve models and permutate tables.
 Copy solved table from ```solved_15``` directory to ```fixed_15```, commit and send pull request.
 
 ### [model_trans.cc](model_trans.cc)
 
-Generate model of table that avoids data hazards
+Generate model of vector table that avoids data hazards
 
 ### [solved_trans.cc](solved_trans.cc)
 
-Generate data hazard free table from transformed table and solution
+Generate data hazard free vector table from transformed table and solution
 
