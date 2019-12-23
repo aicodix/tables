@@ -5,7 +5,7 @@ Transformed and swapped lines to avoid data hazards.
 
 ### [fixed_15](fixed_15) [fixed_30](fixed_30) [fixed_45](fixed_45)
 
-Transformed and swapped lines to avoid data hazards for vector sizes of 15, 30 and 45.
+Swapped rows and columns to avoid data hazards for vector sizes of 15, 30 and 45.
 
 ### [trans](trans)
 
