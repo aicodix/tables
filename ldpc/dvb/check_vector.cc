@@ -44,13 +44,11 @@ int main(int argc, char **argv)
 		}
 	}
 	for (int pty0 = 0; pty0 < ptys.size(); ++pty0) {
-		int delay = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
-		for (int dist = 1; dist < delay; ++dist) {
-			int pty1 = (pty0 + dist) % ptys.size();
-			for (const auto &loc0: ptys[pty0]) {
-				for (const auto &loc1: ptys[pty1]) {
-					if (loc0.off == loc1.off) {
-						std::cout << "parities " << pty0 << " and " << pty1 << " have same location offset " << loc0.off << std::endl;
+		for (int loc0 = 0; loc0 < ptys[pty0].size(); ++loc0) {
+			for (int pty1 = (pty0 + 1) % ptys.size(), dist = PIPELINE_LENGTH + loc0; dist > 0; pty1 = (pty1 + 1) % ptys.size()) {
+				for (int loc1 = 0; loc1 < ptys[pty1].size() && dist > 0; ++loc1, --dist) {
+					if (ptys[pty0][loc0].off == ptys[pty1][loc1].off) {
+						std::cout << "parities " << pty0 << " and " << pty1 << " have same location offset " << ptys[pty0][loc0].off << std::endl;
 						++violations;
 					}
 				}
