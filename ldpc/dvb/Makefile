@@ -4,11 +4,17 @@ GLPSOL = glpsol
 .PHONY: info
 info: $(addprefix info/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
+.PHONY: comp
+comp: $(addprefix comp/,$(notdir $(wildcard fixed/dvb_*.txt)))
+
 .PHONY: check
 check: $(addprefix check/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
 .PHONY: transform
 transform: $(addprefix trans/,$(notdir $(wildcard orig/dvb_*.txt)))
+
+comp/dvb_%.txt: fixed/dvb_%.txt comp_trans
+	./comp_trans $< $(addprefix trans/,$(notdir $<))
 
 trans/dvb_16200_%.txt: orig/dvb_16200_%.txt dvb_trans
 	./dvb_trans $@ $< 16200 360
@@ -39,6 +45,7 @@ check/dvb_64800_%.txt: fixed/dvb_64800_%.txt check_trans
 
 dvb_trans: dvb_trans.cc
 info_trans: info_trans.cc
+comp_trans: comp_trans.cc
 check_trans: check_trans.cc
 check_vector: check_vector.cc
 vector_trans: vector_trans.cc
@@ -48,11 +55,17 @@ solved_trans: solved_trans.cc
 .PHONY: transform_15
 transform_15: $(addprefix trans_15/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
+.PHONY: comp_15
+comp_15: $(addprefix comp_15/,$(notdir $(wildcard fixed_15/dvb_*.txt)))
+
 .PHONY: check_15
 check_15: $(addprefix check_15/,$(notdir $(wildcard fixed_15/dvb_*.txt)))
 
 .PHONY: solve_15
 solve_15: $(addprefix solved_15/,$(notdir $(wildcard input_15/dvb_*.txt)))
+
+comp_15/dvb_%.txt: fixed_15/dvb_%.txt comp_trans
+	./comp_trans $< $(addprefix trans_15/,$(notdir $<))
 
 model_15/dvb_%.txt: input_15/dvb_%.txt model_trans | model_15
 	./model_trans $@ $<
@@ -83,11 +96,17 @@ model_15 solution_15 solved_15:
 .PHONY: transform_30
 transform_30: $(addprefix trans_30/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
+.PHONY: comp_30
+comp_30: $(addprefix comp_30/,$(notdir $(wildcard fixed_30/dvb_*.txt)))
+
 .PHONY: check_30
 check_30: $(addprefix check_30/,$(notdir $(wildcard fixed_30/dvb_*.txt)))
 
 .PHONY: solve_30
 solve_30: $(addprefix solved_30/,$(notdir $(wildcard input_30/dvb_*.txt)))
+
+comp_30/dvb_%.txt: fixed_30/dvb_%.txt comp_trans
+	./comp_trans $< $(addprefix trans_30/,$(notdir $<))
 
 model_30/dvb_%.txt: input_30/dvb_%.txt model_trans | model_30
 	./model_trans $@ $<
@@ -118,11 +137,17 @@ model_30 solution_30 solved_30:
 .PHONY: transform_45
 transform_45: $(addprefix trans_45/,$(notdir $(wildcard fixed/dvb_*.txt)))
 
+.PHONY: comp_45
+comp_45: $(addprefix comp_45/,$(notdir $(wildcard fixed_45/dvb_*.txt)))
+
 .PHONY: check_45
 check_45: $(addprefix check_45/,$(notdir $(wildcard fixed_45/dvb_*.txt)))
 
 .PHONY: solve_45
 solve_45: $(addprefix solved_45/,$(notdir $(wildcard input_45/dvb_*.txt)))
+
+comp_45/dvb_%.txt: fixed_45/dvb_%.txt comp_trans
+	./comp_trans $< $(addprefix trans_45/,$(notdir $<))
 
 model_45/dvb_%.txt: input_45/dvb_%.txt model_trans | model_45
 	./model_trans $@ $<
@@ -152,5 +177,5 @@ model_45 solution_45 solved_45:
 
 .PHONY: clean
 clean:
-	rm -rf dvb_trans info_trans check_trans check_vector vector_trans model_trans solved_trans model_15 solution_15 model_30 solution_30 model_45 solution_45 solved_45
+	rm -rf dvb_trans info_trans comp_trans check_trans check_vector vector_trans model_trans solved_trans model_15 solution_15 model_30 solution_30 model_45 solution_45 solved_45
 

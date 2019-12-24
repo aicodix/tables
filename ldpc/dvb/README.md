@@ -40,6 +40,10 @@ Transform DVB LDPC table for vector decoders
 
 Information about transformed table
 
+### [comp_trans.cc](comp_trans.cc)
+
+Compare if two transformed tables are identical
+
 ### [check_trans.cc](check_trans.cc)
 
 Check transformed table for data hazards

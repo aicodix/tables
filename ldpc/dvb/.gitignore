@@ -1,5 +1,6 @@
 dvb_trans
 info_trans
+comp_trans
 check_trans
 check_vector
 vector_trans
