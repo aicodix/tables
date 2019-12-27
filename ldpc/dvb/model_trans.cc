@@ -9,6 +9,7 @@ Copyright 2019 Ahmet Inan <inan@aicodix.de>
 #include <vector>
 
 const int PIPELINE_LENGTH = 13;
+const int MAX_DISTANCE = 16;
 
 int main(int argc, char **argv)
 {
@@ -32,20 +33,24 @@ int main(int argc, char **argv)
 	table_model << "Maximize" << std::endl;
 	for (int line = 0; line < ptys.size(); ++line) {
 		for (int pty = 0; pty < ptys.size(); ++pty) {
-			int weight = ptys[line].size() == ptys[pty].size() ? 2 : 1;
-			table_model << " +" << weight << "P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE) {
+				int weight = ptys[line].size() == ptys[pty].size() ? 2 : 1;
+				table_model << " +" << weight << "P" << pty << "L" << line;
+			}
 		}
 	}
 	table_model << std::endl;
 	table_model << "Subject to" << std::endl;
 	for (int line = 0; line < ptys.size(); ++line) {
 		for (int pty = 0; pty < ptys.size(); ++pty)
-			table_model << " +P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE)
+				table_model << " +P" << pty << "L" << line;
 		table_model << " <= 1" << std::endl;
 	}
 	for (int pty = 0; pty < ptys.size(); ++pty) {
 		for (int line = 0; line < ptys.size(); ++line)
-			table_model << " +P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE)
+				table_model << " +P" << pty << "L" << line;
 		table_model << " <= 1" << std::endl;
 	}
 	for (int pty0 = 0; pty0 < ptys.size(); ++pty0) {
@@ -59,17 +64,20 @@ int main(int argc, char **argv)
 			int delay0 = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
 			for (int dist = 1; dist < delay0; ++dist)
 				for (int line = 0; line < ptys.size(); ++line)
-					table_model << "P" << pty0 << "L" << line << " + P" << pty1 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
+					if (abs(pty0-line) < MAX_DISTANCE && abs(pty1-(line+dist)%ptys.size()) < MAX_DISTANCE)
+						table_model << "P" << pty0 << "L" << line << " + P" << pty1 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
 			int delay1 = (PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
 			for (int dist = 1; dist < delay1; ++dist)
 				for (int line = 0; line < ptys.size(); ++line)
-					table_model << "P" << pty1 << "L" << line << " + P" << pty0 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
+					if (abs(pty1-line) < MAX_DISTANCE && abs(pty0-(line+dist)%ptys.size()) < MAX_DISTANCE)
+						table_model << "P" << pty1 << "L" << line << " + P" << pty0 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
 		}
 	}
 	table_model << "Binary" << std::endl;
 	for (int line = 0; line < ptys.size(); ++line) {
 		for (int pty = 0; pty < ptys.size(); ++pty)
-			table_model << " P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE)
+				table_model << " P" << pty << "L" << line;
 		table_model << std::endl;
 	}
 	table_model << "End" << std::endl;
