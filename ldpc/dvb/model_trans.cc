@@ -61,16 +61,36 @@ int main(int argc, char **argv)
 						goto found;
 			continue;
 			found:
-			int delay0 = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
-			for (int dist = 1; dist < delay0; ++dist)
-				for (int line = 0; line < ptys.size(); ++line)
-					if (abs(pty0-line) < MAX_DISTANCE && abs(pty1-(line+dist)%ptys.size()) < MAX_DISTANCE)
-						table_model << "P" << pty0 << "L" << line << " + P" << pty1 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
-			int delay1 = (PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
-			for (int dist = 1; dist < delay1; ++dist)
-				for (int line = 0; line < ptys.size(); ++line)
-					if (abs(pty1-line) < MAX_DISTANCE && abs(pty0-(line+dist)%ptys.size()) < MAX_DISTANCE)
-						table_model << "P" << pty1 << "L" << line << " + P" << pty0 << "L" << (line+dist)%ptys.size() << " <= 1" << std::endl;
+			for (int line = 0; line < ptys.size(); ++line) {
+				if (abs(pty0-line) < MAX_DISTANCE) {
+					bool intersection = false;
+					int delay0 = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
+					for (int dist = 1; dist < delay0; ++dist) {
+						if (abs(pty1-(line+dist)%ptys.size()) < MAX_DISTANCE) {
+							if (!intersection)
+								table_model << "P" << pty0 << "L" << line;
+							intersection = true;
+							table_model << " + P" << pty1 << "L" << (line+dist)%ptys.size();
+						}
+					}
+					if (intersection)
+						table_model << " <= 1" << std::endl;
+				}
+				if (abs(pty1-line) < MAX_DISTANCE) {
+					bool intersection = false;
+					int delay1 = (PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
+					for (int dist = 1; dist < delay1; ++dist) {
+						if (abs(pty0-(line+dist)%ptys.size()) < MAX_DISTANCE) {
+							if (!intersection)
+								table_model << "P" << pty1 << "L" << line;
+							intersection = true;
+							table_model << " + P" << pty0 << "L" << (line+dist)%ptys.size();
+						}
+					}
+					if (intersection)
+						table_model << " <= 1" << std::endl;
+				}
+			}
 		}
 	}
 	table_model << "Binary" << std::endl;
