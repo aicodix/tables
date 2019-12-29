@@ -65,14 +65,8 @@ check_15: $(addprefix check_15/,$(notdir $(wildcard fixed_15/dvb_*.txt)))
 solve_15: $(addprefix solved_15/,$(notdir $(wildcard input_15/dvb_*.txt)))
 
 solved_15/dvb_%.txt: input_15/dvb_%.txt | model_trans solved_trans
-	mkdir -p model_15
-	./model_trans $(addprefix model_15/,$(notdir $<)) $<
-	mkdir -p solution_15
-	$(GLPSOL) -o $(addprefix solution_15/,$(notdir $<)) --lp $(addprefix model_15/,$(notdir $<))
-	rm -f $(addprefix model_15/,$(notdir $<))
 	mkdir -p solved_15
-	./solved_trans $@ $(addprefix solution_15/,$(notdir $<)) $(addprefix input_15/,$(notdir $<))
-	rm -f $(addprefix solution_15/,$(notdir $<))
+	./model_trans /dev/stdout $< | $(GLPSOL) --log /dev/stderr -o /dev/stdout --lp /dev/stdin | ./solved_trans $@ /dev/stdin $<
 
 comp_15/dvb_%.txt: fixed_15/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_15/,$(notdir $<))
@@ -102,14 +96,8 @@ check_30: $(addprefix check_30/,$(notdir $(wildcard fixed_30/dvb_*.txt)))
 solve_30: $(addprefix solved_30/,$(notdir $(wildcard input_30/dvb_*.txt)))
 
 solved_30/dvb_%.txt: input_30/dvb_%.txt | model_trans solved_trans
-	mkdir -p model_30
-	./model_trans $(addprefix model_30/,$(notdir $<)) $<
-	mkdir -p solution_30
-	$(GLPSOL) -o $(addprefix solution_30/,$(notdir $<)) --lp $(addprefix model_30/,$(notdir $<))
-	rm -f $(addprefix model_30/,$(notdir $<))
 	mkdir -p solved_30
-	./solved_trans $@ $(addprefix solution_30/,$(notdir $<)) $(addprefix input_30/,$(notdir $<))
-	rm -f $(addprefix solution_30/,$(notdir $<))
+	./model_trans /dev/stdout $< | $(GLPSOL) --log /dev/stderr -o /dev/stdout --lp /dev/stdin | ./solved_trans $@ /dev/stdin $<
 
 comp_30/dvb_%.txt: fixed_30/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_30/,$(notdir $<))
@@ -139,14 +127,8 @@ check_45: $(addprefix check_45/,$(notdir $(wildcard fixed_45/dvb_*.txt)))
 solve_45: $(addprefix solved_45/,$(notdir $(wildcard input_45/dvb_*.txt)))
 
 solved_45/dvb_%.txt: input_45/dvb_%.txt | model_trans solved_trans
-	mkdir -p model_45
-	./model_trans $(addprefix model_45/,$(notdir $<)) $<
-	mkdir -p solution_45
-	$(GLPSOL) -o $(addprefix solution_45/,$(notdir $<)) --lp $(addprefix model_45/,$(notdir $<))
-	rm -f $(addprefix model_45/,$(notdir $<))
 	mkdir -p solved_45
-	./solved_trans $@ $(addprefix solution_45/,$(notdir $<)) $(addprefix input_45/,$(notdir $<))
-	rm -f $(addprefix solution_45/,$(notdir $<))
+	./model_trans /dev/stdout $< | $(GLPSOL) --log /dev/stderr -o /dev/stdout --lp /dev/stdin | ./solved_trans $@ /dev/stdin $<
 
 comp_45/dvb_%.txt: fixed_45/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_45/,$(notdir $<))
@@ -165,6 +147,5 @@ trans_45/dvb_64800_%.txt: fixed/dvb_64800_%.txt vector_trans
 
 .PHONY: clean
 clean:
-	rm -rf dvb_trans info_trans comp_trans check_trans check_vector vector_trans
-	rm -rf model_trans solved_trans model_15 solution_15 model_30 solution_30 model_45 solution_45
+	rm -rf dvb_trans info_trans comp_trans check_trans check_vector vector_trans model_trans solved_trans
 
