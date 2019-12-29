@@ -57,13 +57,16 @@ Check transformed vector table for data hazards
 Prerequisites:
 
 * [GLPK](https://www.gnu.org/software/glpk/) to solve linear programming problems.
-* A lot of memory, disk space and patience.
+* A lot of patience.
 
 Example for vector size of 15:
 
 Copy tables that need permutation, e.g. from ```trans_15``` to ```input_15``` directory.
 Run ```make solve_15``` to generate models of tables, solve models and permutate tables.
-Copy solved table from ```solved_15``` directory to ```fixed_15```, commit and send pull request.
+Copy solved table from ```solved_15``` directory to ```fixed_15```.
+Run ```make comp_15``` to compare permuted tables in ```fixed_15``` with originals in ```trans_15```.
+Run ```make check_15``` to check permuted tables in ```fixed_15``` for data hazards.
+Commit new tables and send pull request.
 
 ### [model_trans.cc](model_trans.cc)
 
