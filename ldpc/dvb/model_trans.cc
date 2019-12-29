@@ -10,6 +10,7 @@ Copyright 2019 Ahmet Inan <inan@aicodix.de>
 
 const int PIPELINE_LENGTH = 13;
 const int MAX_DISTANCE = 16;
+const bool OVERDO = true;
 
 int main(int argc, char **argv)
 {
@@ -64,7 +65,7 @@ int main(int argc, char **argv)
 			for (int line = 0; line < ptys.size(); ++line) {
 				if (abs(pty0-line) < MAX_DISTANCE) {
 					bool intersection = false;
-					int delay0 = (PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
+					int delay0 = ((1 + OVERDO) * PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
 					for (int dist = 1; dist < delay0; ++dist) {
 						if (abs(pty1-(line+dist)%ptys.size()) < MAX_DISTANCE) {
 							if (!intersection)
@@ -78,7 +79,7 @@ int main(int argc, char **argv)
 				}
 				if (abs(pty1-line) < MAX_DISTANCE) {
 					bool intersection = false;
-					int delay1 = (PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
+					int delay1 = ((1 + OVERDO) * PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
 					for (int dist = 1; dist < delay1; ++dist) {
 						if (abs(pty0-(line+dist)%ptys.size()) < MAX_DISTANCE) {
 							if (!intersection)
