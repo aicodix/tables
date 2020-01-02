@@ -6,11 +6,15 @@ Copyright 2019 Ahmet Inan <inan@aicodix.de>
 
 #include <fstream>
 #include <iostream>
+#include <numeric>
+#include <random>
+#include <algorithm>
 #include <vector>
 
 const int PIPELINE_LENGTH = 13;
 const int MAX_DISTANCE = 16;
 const bool OVERDO = true;
+const bool RANDOMIZE = true;
 
 int main(int argc, char **argv)
 {
@@ -30,60 +34,72 @@ int main(int argc, char **argv)
 		}
 		ptys.emplace_back(pty);
 	}
+	std::vector<int> map(ptys.size());
+	std::iota(map.begin(), map.end(), 0);
+	if (RANDOMIZE) {
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		for (auto begin = map.begin(), end = std::next(map.begin()); begin != map.end(); ++end) {
+			if (end == map.end() || ptys[*begin].size() != ptys[*end].size()) {
+				std::shuffle(begin, end, gen);
+				begin = end;
+			}
+		}
+	}
 	std::ofstream table_model(argv[1]);
 	table_model << "Maximize" << std::endl;
 	for (int line = 0; line < ptys.size(); ++line) {
 		for (int pty = 0; pty < ptys.size(); ++pty) {
-			if (abs(pty-line) < MAX_DISTANCE && ptys[line].size() == ptys[pty].size())
-				table_model << " +P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE && ptys[map[line]].size() == ptys[map[pty]].size())
+				table_model << " +P" << map[pty] << "L" << line;
 		}
 	}
 	table_model << std::endl;
 	table_model << "Subject to" << std::endl;
 	for (int line = 0; line < ptys.size(); ++line) {
 		for (int pty = 0; pty < ptys.size(); ++pty)
-			if (abs(pty-line) < MAX_DISTANCE && ptys[line].size() == ptys[pty].size())
-				table_model << " +P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE && ptys[map[line]].size() == ptys[map[pty]].size())
+				table_model << " +P" << map[pty] << "L" << line;
 		table_model << " <= 1" << std::endl;
 	}
 	for (int pty = 0; pty < ptys.size(); ++pty) {
 		for (int line = 0; line < ptys.size(); ++line)
-			if (abs(pty-line) < MAX_DISTANCE && ptys[line].size() == ptys[pty].size())
-				table_model << " +P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE && ptys[map[line]].size() == ptys[map[pty]].size())
+				table_model << " +P" << map[pty] << "L" << line;
 		table_model << " <= 1" << std::endl;
 	}
 	for (int pty0 = 0; pty0 < ptys.size(); ++pty0) {
 		for (int pty1 = pty0+1; pty1 < ptys.size(); ++pty1) {
-			for (const auto &loc0: ptys[pty0])
-				for (const auto &loc1: ptys[pty1])
+			for (const auto &loc0: ptys[map[pty0]])
+				for (const auto &loc1: ptys[map[pty1]])
 					if (loc0.off == loc1.off)
 						goto found;
 			continue;
 			found:
 			for (int line = 0; line < ptys.size(); ++line) {
-				if (abs(pty0-line) < MAX_DISTANCE && ptys[line].size() == ptys[pty0].size()) {
+				if (abs(pty0-line) < MAX_DISTANCE && ptys[map[line]].size() == ptys[map[pty0]].size()) {
 					bool intersection = false;
-					int delay0 = ((1 + OVERDO) * PIPELINE_LENGTH + 2 * ptys[pty0].size() - 1) / ptys[pty0].size();
+					int delay0 = ((1 + OVERDO) * PIPELINE_LENGTH + 2 * ptys[map[pty0]].size() - 1) / ptys[map[pty0]].size();
 					for (int dist = 1; dist < delay0; ++dist) {
-						if (abs(pty1-(line+dist)%ptys.size()) < MAX_DISTANCE && ptys[(line+dist)%ptys.size()].size() == ptys[pty1].size()) {
+						if (abs(pty1-(line+dist)%ptys.size()) < MAX_DISTANCE && ptys[(line+dist)%ptys.size()].size() == ptys[map[pty1]].size()) {
 							if (!intersection)
-								table_model << "P" << pty0 << "L" << line;
+								table_model << "P" << map[pty0] << "L" << line;
 							intersection = true;
-							table_model << " + P" << pty1 << "L" << (line+dist)%ptys.size();
+							table_model << " + P" << map[pty1] << "L" << (line+dist)%ptys.size();
 						}
 					}
 					if (intersection)
 						table_model << " <= 1" << std::endl;
 				}
-				if (abs(pty1-line) < MAX_DISTANCE && ptys[line].size() == ptys[pty1].size()) {
+				if (abs(pty1-line) < MAX_DISTANCE && ptys[map[line]].size() == ptys[map[pty1]].size()) {
 					bool intersection = false;
-					int delay1 = ((1 + OVERDO) * PIPELINE_LENGTH + 2 * ptys[pty1].size() - 1) / ptys[pty1].size();
+					int delay1 = ((1 + OVERDO) * PIPELINE_LENGTH + 2 * ptys[map[pty1]].size() - 1) / ptys[map[pty1]].size();
 					for (int dist = 1; dist < delay1; ++dist) {
-						if (abs(pty0-(line+dist)%ptys.size()) < MAX_DISTANCE && ptys[(line+dist)%ptys.size()].size() == ptys[pty0].size()) {
+						if (abs(pty0-(line+dist)%ptys.size()) < MAX_DISTANCE && ptys[(line+dist)%ptys.size()].size() == ptys[map[pty0]].size()) {
 							if (!intersection)
-								table_model << "P" << pty1 << "L" << line;
+								table_model << "P" << map[pty1] << "L" << line;
 							intersection = true;
-							table_model << " + P" << pty0 << "L" << (line+dist)%ptys.size();
+							table_model << " + P" << map[pty0] << "L" << (line+dist)%ptys.size();
 						}
 					}
 					if (intersection)
@@ -95,8 +111,8 @@ int main(int argc, char **argv)
 	table_model << "Binary" << std::endl;
 	for (int line = 0; line < ptys.size(); ++line) {
 		for (int pty = 0; pty < ptys.size(); ++pty)
-			if (abs(pty-line) < MAX_DISTANCE && ptys[line].size() == ptys[pty].size())
-				table_model << " P" << pty << "L" << line;
+			if (abs(pty-line) < MAX_DISTANCE && ptys[map[line]].size() == ptys[map[pty]].size())
+				table_model << " P" << map[pty] << "L" << line;
 		table_model << std::endl;
 	}
 	table_model << "End" << std::endl;
