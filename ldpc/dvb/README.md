@@ -56,7 +56,7 @@ Check transformed vector table for data hazards
 
 Prerequisites:
 
-* [GLPK](https://www.gnu.org/software/glpk/) to solve linear programming problems.
+* [Z3](https://github.com/Z3Prover/z3) to solve [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) problems.
 * A lot of patience.
 
 Example for vector size of 15:

@@ -27,38 +27,36 @@ int main(int argc, char **argv)
 		}
 		ptys.emplace_back(pty);
 	}
-	std::vector<int> lines(ptys.size(), -1);
 	std::ifstream table_solution(argv[2]);
 	std::string buf;
-	while (getline(table_solution, buf) && buf.find("Column name") == std::string::npos);
-	if (!getline(table_solution, buf) || buf[0] != '-') {
-		std::cerr << "EOF or parsing error!" << std::endl;
+	if (!getline(table_solution, buf)) {
+		std::cerr << "EOF error!" << std::endl;
 		return 1;
 	}
-	while (getline(table_solution, buf) && buf.length() > 0) {
-		size_t P = buf.find('P');
-		size_t V = buf.find('*');
-		if (P == std::string::npos || V == std::string::npos) {
+	if (buf == "timeout") {
+		std::cerr << "timeout error!" << std::endl;
+		return 1;
+	}
+	if (buf == "unsat") {
+		std::cerr << "unsatisfiable error!" << std::endl;
+		return 1;
+	}
+	if (buf != "sat") {
+		std::cerr << "unknown error!" << std::endl;
+		return 1;
+	}
+	std::vector<int> lines(ptys.size(), -1);
+	for (int pty = 0; getline(table_solution, buf) && buf.length() > 0 && pty < ptys.size(); ++pty) {
+		int line = std::stoi(buf);
+		if (line < 0 || line >= ptys.size()) {
 			std::cerr << "parsing error!" << std::endl;
 			return 1;
 		}
-		std::string subP = buf.substr(P+1);
-		size_t L;
-		int pty = std::stoi(subP, &L);
-		std::string subL = subP.substr(L+1);
-		int line = std::stoi(subL);
-		std::string subV = buf.substr(V+1);
-		int val = std::stoi(subV);
-		if (pty < 0 || pty >= ptys.size() || line < 0 || line >= ptys.size() || val < 0 || val > 1) {
-			std::cerr << "parsing or bound error!" << std::endl;
-			return 1;
-		}
-		if (val && lines[line] != -1) {
+		if (lines[line] != -1) {
 			std::cerr << "solution error!" << std::endl;
 			return 1;
 		}
-		if (val)
-			lines[line] = pty;
+		lines[line] = pty;
 	}
 	if (std::find(lines.begin(), lines.end(), -1) != lines.end()) {
 		std::cerr << "no solution found!" << std::endl;

@@ -1,5 +1,5 @@
 
-GLPSOL = timeout 3600 glpsol
+Z3 = z3
 
 .PHONY: info
 info: $(addprefix info/,$(notdir $(wildcard fixed/dvb_*.txt)))
@@ -65,8 +65,8 @@ check_15: $(addprefix check_15/,$(notdir $(wildcard fixed_15/dvb_*.txt)))
 solve_15: $(addprefix solved_15/,$(notdir $(wildcard input_15/dvb_*.txt)))
 
 solved_15/dvb_%.txt: input_15/dvb_%.txt | model_trans solved_trans
-	mkdir -p solved_15
-	-./model_trans /dev/stdout $< | $(GLPSOL) --log /dev/stderr -o /dev/stdout --lp /dev/stdin | ./solved_trans $@ /dev/stdin $<
+	@mkdir -p solved_15
+	-./model_trans /dev/stdout $< | $(Z3) -smt2 -in | ./solved_trans $@ /dev/stdin $<
 
 comp_15/dvb_%.txt: fixed_15/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_15/,$(notdir $<))
@@ -96,8 +96,8 @@ check_30: $(addprefix check_30/,$(notdir $(wildcard fixed_30/dvb_*.txt)))
 solve_30: $(addprefix solved_30/,$(notdir $(wildcard input_30/dvb_*.txt)))
 
 solved_30/dvb_%.txt: input_30/dvb_%.txt | model_trans solved_trans
-	mkdir -p solved_30
-	-./model_trans /dev/stdout $< | $(GLPSOL) --log /dev/stderr -o /dev/stdout --lp /dev/stdin | ./solved_trans $@ /dev/stdin $<
+	@mkdir -p solved_30
+	-./model_trans /dev/stdout $< | $(Z3) -smt2 -in | ./solved_trans $@ /dev/stdin $<
 
 comp_30/dvb_%.txt: fixed_30/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_30/,$(notdir $<))
@@ -127,8 +127,8 @@ check_45: $(addprefix check_45/,$(notdir $(wildcard fixed_45/dvb_*.txt)))
 solve_45: $(addprefix solved_45/,$(notdir $(wildcard input_45/dvb_*.txt)))
 
 solved_45/dvb_%.txt: input_45/dvb_%.txt | model_trans solved_trans
-	mkdir -p solved_45
-	-./model_trans /dev/stdout $< | $(GLPSOL) --log /dev/stderr -o /dev/stdout --lp /dev/stdin | ./solved_trans $@ /dev/stdin $<
+	@mkdir -p solved_45
+	-./model_trans /dev/stdout $< | $(Z3) -smt2 -in | ./solved_trans $@ /dev/stdin $<
 
 comp_45/dvb_%.txt: fixed_45/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_45/,$(notdir $<))
