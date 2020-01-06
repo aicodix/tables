@@ -46,9 +46,16 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	std::vector<int> lines(ptys.size(), -1);
-	for (int pty = 0; getline(table_solution, buf) && buf.length() > 0 && pty < ptys.size(); ++pty) {
-		int line = std::stoi(buf);
-		if (line < 0 || line >= ptys.size()) {
+	while (getline(table_solution, buf) && buf.length() > 0) {
+		size_t posP = buf.find('P');
+		size_t posL = buf.find('b');
+		if (posP == std::string::npos || posP == std::string::npos)
+			continue;
+		std::string subP = buf.substr(posP+1);
+		std::string subL = buf.substr(posL+1);
+		int pty = std::stoi(subP);
+		int line = std::stoi(subL, 0, 2);
+		if (pty < 0 || pty >= ptys.size() || line < 0 || line >= ptys.size()) {
 			std::cerr << "parsing error!" << std::endl;
 			return 1;
 		}
