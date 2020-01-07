@@ -1,5 +1,6 @@
 
-Z3 = z3
+SOLVER = z3 -smt2 -in
+#SOLVER = boolector --smt2
 
 .PHONY: info
 info: $(addprefix info/,$(notdir $(wildcard fixed/dvb_*.txt)))
@@ -66,7 +67,7 @@ solve_15: $(addprefix solved_15/,$(notdir $(wildcard input_15/dvb_*.txt)))
 
 solved_15/dvb_%.txt: input_15/dvb_%.txt | model_trans solved_trans
 	@mkdir -p solved_15
-	-./model_trans /dev/stdout $< | $(Z3) -smt2 -in | ./solved_trans $@ /dev/stdin $<
+	-./model_trans /dev/stdout $< | $(SOLVER) | ./solved_trans $@ /dev/stdin $<
 
 comp_15/dvb_%.txt: fixed_15/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_15/,$(notdir $<))
@@ -97,7 +98,7 @@ solve_30: $(addprefix solved_30/,$(notdir $(wildcard input_30/dvb_*.txt)))
 
 solved_30/dvb_%.txt: input_30/dvb_%.txt | model_trans solved_trans
 	@mkdir -p solved_30
-	-./model_trans /dev/stdout $< | $(Z3) -smt2 -in | ./solved_trans $@ /dev/stdin $<
+	-./model_trans /dev/stdout $< | $(SOLVER) | ./solved_trans $@ /dev/stdin $<
 
 comp_30/dvb_%.txt: fixed_30/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_30/,$(notdir $<))
@@ -128,7 +129,7 @@ solve_45: $(addprefix solved_45/,$(notdir $(wildcard input_45/dvb_*.txt)))
 
 solved_45/dvb_%.txt: input_45/dvb_%.txt | model_trans solved_trans
 	@mkdir -p solved_45
-	-./model_trans /dev/stdout $< | $(Z3) -smt2 -in | ./solved_trans $@ /dev/stdin $<
+	-./model_trans /dev/stdout $< | $(SOLVER) | ./solved_trans $@ /dev/stdin $<
 
 comp_45/dvb_%.txt: fixed_45/dvb_%.txt comp_trans
 	./comp_trans $< $(addprefix trans_45/,$(notdir $<))
