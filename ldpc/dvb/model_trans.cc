@@ -33,8 +33,8 @@ int main(int argc, char **argv)
 	while ((1 << vlen) < ptys.size())
 		++vlen;
 	std::ofstream table_model(argv[1]);
-	table_model << "(set-logic QF_BV)" << std::endl;
 	table_model << "(set-option :produce-models true)" << std::endl;
+	table_model << "(set-logic QF_BV)" << std::endl;
 	table_model << "(define-fun delay ((a (_ BitVec " << vlen << ")) (b (_ BitVec " << vlen << ")) (c (_ BitVec " << vlen << ")) (d (_ BitVec " << vlen << "))) Bool" << std::endl;
 	table_model << "	(ite (bvult a b)" << std::endl;
 	table_model << "	(and (bvuge (bvsub b a) c) (bvuge (bvsub (_ bv" << ptys.size()-1 << " " << vlen << ") (bvsub b a)) (bvsub d (_ bv1 " << vlen << "))))" << std::endl;

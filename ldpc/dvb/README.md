@@ -56,7 +56,7 @@ Check transformed vector table for data hazards
 
 Prerequisites:
 
-* [Z3](https://github.com/Z3Prover/z3) or [Boolector](https://boolector.github.io/) to solve [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) problems.
+* [Z3](https://github.com/Z3Prover/z3), [Yices](https://yices.csl.sri.com/) or [Boolector](https://boolector.github.io/) to solve [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) problems.
 * A lot of patience.
 
 Example for vector size of 15:
