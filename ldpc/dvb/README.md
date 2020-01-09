@@ -68,6 +68,22 @@ Run ```make comp_15``` to compare permuted tables in ```fixed_15``` with origina
 Run ```make check_15``` to check permuted tables in ```fixed_15``` for data hazards.
 Commit new tables and send pull request.
 
+### FYI
+
+The following tables cant be satisfied with OVERDO enabled:
+
+trans_45/dvb_16200_s2_c9_t2_b7.txt
+trans_45/dvb_16200_s2_c7_t2_b5.txt
+trans_45/dvb_16200_s2_c4_t2_b2.txt
+
+And these abort after more than 24 Hours, so unknown:
+
+trans_45/dvb_16200_s2x_c5.txt
+trans_45/dvb_16200_s2x_c4.txt
+
+They need to be solved with OVERDO disabled.
+If ```check_vector``` reports problems, then the affected columns need to be manually rearranged to avoid data hazards.
+
 ### [model_trans.cc](model_trans.cc)
 
 Generate model of vector table that avoids data hazards
