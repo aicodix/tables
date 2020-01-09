@@ -1,7 +1,7 @@
 
-SOLVER = z3 -smt2 -in
-#SOLVER = boolector --smt2
-#SOLVER = yices_smt2
+SOLVER = z3 -T:86400 -smt2 -in
+#SOLVER = boolector -t 86400 --smt2
+#SOLVER = yices_smt2 -t 86400
 
 .PHONY: info
 info: $(addprefix info/,$(notdir $(wildcard fixed/dvb_*.txt)))
