@@ -33,10 +33,6 @@ int main(int argc, char **argv)
 		std::cerr << "EOF error!" << std::endl;
 		return 1;
 	}
-	if (buf == "timeout") {
-		std::cerr << "timeout error!" << std::endl;
-		return 1;
-	}
 	if (buf == "unsat") {
 		std::cerr << "unsatisfiable error!" << std::endl;
 		return 1;
@@ -48,20 +44,30 @@ int main(int argc, char **argv)
 	std::vector<int> lines(ptys.size(), -1);
 	while (getline(table_solution, buf) && buf.length() > 0) {
 		size_t posP = buf.find('P');
-		size_t posL = buf.find('#');
-		if (posP == std::string::npos || posP == std::string::npos)
+		if (posP == std::string::npos)
 			continue;
 		std::string subP = buf.substr(posP+1);
-		std::string subL = buf.substr(posL+2);
-		int pty = std::stoi(subP);
-		int base = -1;
-		if (buf[posL+1] == 'b')
+		size_t nxtL;
+		int pty = std::stoi(subP, &nxtL);
+		int base;
+		std::string subL;
+		size_t posL = buf.find('#');
+		if (posL == std::string::npos) {
+			base = 10;
+			subL = subP.substr(nxtL);
+		} else if (buf[posL+1] == 'b') {
 			base = 2;
-		if (buf[posL+1] == 'x')
+			subL = buf.substr(posL+2);
+		} else if (buf[posL+1] == 'x') {
 			base = 16;
-		int line = std::stoi(subL, 0, base);
-		if (base == -1 || pty < 0 || pty >= ptys.size() || line < 0 || line >= ptys.size()) {
+			subL = buf.substr(posL+2);
+		} else {
 			std::cerr << "parsing error!" << std::endl;
+			return 1;
+		}
+		int line = std::stoi(subL, 0, base);
+		if (pty < 0 || pty >= ptys.size() || line < 0 || line >= ptys.size()) {
+			std::cerr << "range error!" << std::endl;
 			return 1;
 		}
 		if (lines[line] != -1) {
