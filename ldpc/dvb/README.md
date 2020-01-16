@@ -76,13 +76,21 @@ trans_45/dvb_16200_s2_c9_t2_b7.txt
 trans_45/dvb_16200_s2_c7_t2_b5.txt
 trans_45/dvb_16200_s2_c4_t2_b2.txt
 
+They need to be solved with OVERDO disabled.
+If ```check_vector``` reports problems, then the affected columns need to be manually rearranged to avoid data hazards.
+
+These need about 30 GiB of RAM using BitVec and Yices:
+
+trans_15/dvb_64800_s2_b1.txt
+trans_15/dvb_64800_s2x_b1.txt
+trans_15/dvb_64800_s2x_b2.txt
+
 And these abort after more than 24 Hours, so unknown:
 
 trans_45/dvb_16200_s2x_c5.txt
 trans_45/dvb_16200_s2x_c4.txt
-
-They need to be solved with OVERDO disabled.
-If ```check_vector``` reports problems, then the affected columns need to be manually rearranged to avoid data hazards.
+trans_15/dvb_64800_s2_b1.txt
+trans_15/dvb_64800_s2x_b2.txt
 
 ### [model_trans.cc](model_trans.cc)
 
