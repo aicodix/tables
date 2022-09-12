@@ -147,6 +147,37 @@ trans_45/dvb_32400_%.txt: fixed/dvb_32400_%.txt vector_trans
 trans_45/dvb_64800_%.txt: fixed/dvb_64800_%.txt vector_trans
 	./vector_trans $@ $< 64800 360 45
 
+.PHONY: transform_120
+transform_120: $(addprefix trans_120/,$(notdir $(wildcard fixed/dvb_*.txt)))
+
+.PHONY: comp_120
+comp_120: $(addprefix comp_120/,$(notdir $(wildcard fixed_120/dvb_*.txt)))
+
+.PHONY: check_120
+check_120: $(addprefix check_120/,$(notdir $(wildcard fixed_120/dvb_*.txt)))
+
+.PHONY: solve_120
+solve_120: $(addprefix solved_120/,$(notdir $(wildcard input_120/dvb_*.txt)))
+
+solved_120/dvb_%.txt: input_120/dvb_%.txt | model_trans solved_trans
+	@mkdir -p solved_120
+	-./model_trans /dev/stdout $< | $(SOLVER) | ./solved_trans $@ /dev/stdin $<
+
+comp_120/dvb_%.txt: fixed_120/dvb_%.txt comp_trans
+	./comp_trans $< $(addprefix trans_120/,$(notdir $<))
+
+check_120/dvb_%.txt: fixed_120/dvb_%.txt check_vector
+	./check_vector $<
+
+trans_120/dvb_16200_%.txt: fixed/dvb_16200_%.txt vector_trans
+	./vector_trans $@ $< 16200 360 120
+
+trans_120/dvb_32400_%.txt: fixed/dvb_32400_%.txt vector_trans
+	./vector_trans $@ $< 32400 360 120
+
+trans_120/dvb_64800_%.txt: fixed/dvb_64800_%.txt vector_trans
+	./vector_trans $@ $< 64800 360 120
+
 .PHONY: clean
 clean:
 	rm -rf dvb_trans info_trans comp_trans check_trans check_vector vector_trans model_trans solved_trans

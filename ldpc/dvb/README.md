@@ -3,17 +3,17 @@
 
 Transformed and swapped lines to avoid data hazards.
 
-### [fixed_15](fixed_15) [fixed_30](fixed_30) [fixed_45](fixed_45)
+### [fixed_15](fixed_15) [fixed_30](fixed_30) [fixed_45](fixed_45) and [fixed_120](fixed_120)
 
-Swapped rows and columns to avoid data hazards for vector sizes of 15, 30 and 45.
+Swapped rows and columns to avoid data hazards for vector sizes of 15, 30, 45 and 120.
 
 ### [trans](trans)
 
 Transformed DVB LDPC code tables by [dvb_trans.cc](dvb_trans.cc)
 
-### [trans_15](trans_15) [trans_30](trans_30) [trans_45](trans_45)
+### [trans_15](trans_15) [trans_30](trans_30) [trans_45](trans_45) [trans_120](trans_120)
 
-Transformed DVB LDPC code tables by [vector_trans.cc](vector_trans.cc) for vector size of 15, 30 and 45.
+Transformed DVB LDPC code tables by [vector_trans.cc](vector_trans.cc) for vector size of 15, 30, 45 and 120.
 
 ### [orig](orig)
 
@@ -70,14 +70,27 @@ Commit new tables and send pull request.
 
 ### FYI
 
-The following tables cant be satisfied with OVERDO enabled:
+The following tables can only be satisfied with OVERDO disabled:
 
+trans_120/dvb_16200_s2_c6_t2_b4.txt
+trans_120/dvb_16200_s2x_c2.txt
+trans_120/dvb_16200_s2x_c4.txt
+trans_120/dvb_16200_s2x_c5.txt
+trans_120/dvb_64800_s2x_b24.txt
 trans_45/dvb_16200_s2_c9_t2_b7.txt
 trans_45/dvb_16200_s2_c7_t2_b5.txt
 trans_45/dvb_16200_s2_c4_t2_b2.txt
 
-They need to be solved with OVERDO disabled.
 If ```check_vector``` reports problems, then the affected columns need to be manually rearranged to avoid data hazards.
+
+Unfortunately the following tables cant be satisfied, even with OVERDO disabled:
+
+trans_120/dvb_16200_s2_c10.txt
+trans_120/dvb_16200_s2_c4_t2_b2.txt
+trans_120/dvb_16200_s2_c7_t2_b5.txt
+trans_120/dvb_16200_s2_c8_t2_b6.txt
+trans_120/dvb_16200_s2_c9_t2_b7.txt
+trans_120/dvb_64800_s2x_b21.txt
 
 These need about 30 GiB of RAM using BitVec and Yices:
 
@@ -87,6 +100,21 @@ trans_15/dvb_64800_s2x_b2.txt
 
 And these abort after more than 24 Hours, so unknown:
 
+trans_120/dvb_16200_s2_c1_t2_b1.txt
+trans_120/dvb_16200_s2_c2_t2_b8.txt
+trans_120/dvb_16200_s2_c3_t2_b9.txt
+trans_120/dvb_16200_s2_c5.txt
+trans_120/dvb_16200_s2_c6_t2_b4.txt
+trans_120/dvb_16200_t2_b3.txt
+trans_120/dvb_16200_s2x_c1.txt
+trans_120/dvb_16200_s2x_c2.txt
+trans_120/dvb_16200_s2x_c3.txt
+trans_120/dvb_16200_s2x_c4.txt
+trans_120/dvb_16200_s2x_c5.txt
+trans_120/dvb_16200_s2x_c6.txt
+trans_120/dvb_16200_s2x_c7.txt
+trans_120/dvb_64800_s2_b9_t2_a6.txt
+trans_120/dvb_64800_s2x_b20.txt
 trans_45/dvb_16200_s2x_c5.txt
 trans_45/dvb_16200_s2x_c4.txt
 trans_15/dvb_64800_s2_b1.txt
